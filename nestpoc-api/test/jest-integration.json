@@ -1,0 +1,27 @@
+{
+  "globalSetup": "<rootDir>/setup-jest.js",
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": "../src",
+  "testRegex": ".\\.i-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@nestpoc/(.*)": "<rootDir>/modules/$1"
+  },
+  "coverageDirectory": "../coverage/integration",
+  "testEnvironment": "node",
+  "collectCoverageFrom": [
+    "<rootDir>/**/*.ts",
+    "!<rootDir>/**/*.spec.ts",
+    "!<rootDir>/**/index.ts",
+    "!<rootDir>/main.ts",
+    "!<rootDir>/**/*.d.ts",
+    "!<rootDir>/**/dist/**/*.d.ts",
+    "!**/__mocks__/**/*.ts"
+  ]
+}

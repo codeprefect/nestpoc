@@ -1,0 +1,35 @@
+type Mutation {
+  logIn(loginInput: LoginInput): LoginResponse!
+  signUp(signUpInput: SignUpInput): LoginResponse!
+  enable2Fa(username: String): TwoFaResponse!
+  confirm2Fa(token: String): NestPocResponse!
+}
+
+type LoginResponse {
+  success: Boolean!
+  token: String
+  has2fa: Boolean
+}
+
+type TwoFaResponse {
+  secret: String!
+  qr: String!
+}
+
+type NestPocResponse {
+  statusCode: Int!
+  message: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String
+  code: String
+  token: String
+}
+
+input SignUpInput {
+  email: String!
+  username: String!
+  password: String!
+}

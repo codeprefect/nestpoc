@@ -1,0 +1,16 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint-config-airbnb"],
+  "rules": {
+    "quotemark": [true, "single"],
+    "member-access": [true],
+    "ordered-imports": [true],
+    "max-line-length": [true, 100],
+    "member-ordering": [true, "fields-first"],
+    "interface-name": [true],
+    "arrow-parens": false,
+    "object-literal-sort-keys": false,
+    "cyclomatic-complexity": [true, "12"],
+    "max-file-line-count": [true, 250]
+  }
+}

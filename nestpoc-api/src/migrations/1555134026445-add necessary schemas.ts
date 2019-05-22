@@ -1,5 +1,5 @@
 import {MigrationInterface, QueryRunner} from 'typeorm';
-import { services } from '../src/modules/common/config/constants';
+import { services } from '../modules/common/config/constants';
 
 export class addNecessarySchemas1555134026445 implements MigrationInterface {
 

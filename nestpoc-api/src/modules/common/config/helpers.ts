@@ -7,7 +7,7 @@ export const getModelRepository = (model: ModelRepository): {
 } => {
   return {
     provide: model.key,
-    useFactory: (connection: Connection) => connection.getRepository(model.schema),
+    useFactory: (conn: Connection) => conn.getRepository(model.schema),
     inject: [databaseProviderKey],
   };
 };

@@ -93,8 +93,9 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
   }
 
   public createDatabaseOpts(): any {
-    const entitiesPath = path.join(process.cwd(), 'src/**/models/*.model.ts');
-    const migrationsPath = path.join(process.cwd(), 'src/../migrations/*.ts');
+    const fileExt = this.isDevelopment ? 'ts' : 'js';
+    const entitiesPath = `./**/modules/**/models/*.model.${fileExt}`;
+    const migrationsPath = `./**/migrations/*.${fileExt}`;
     return {
       type: this.envConfig.NESTPOC_DB_TYPE,
       host: this.envConfig.NESTPOC_DB_HOST,
@@ -119,13 +120,13 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
 
   public createGqlOptions(): GqlModuleOptions {
     return {
-      typePaths: [path.join(process.cwd(), 'src/**/*.graphql')],
+      typePaths: ['./**/*.graphql'],
       context: ({ req, res, connection, payload }) => {
         if (req) {
           return { headers: req.headers };
         }
       },
-      // installSubscriptionHandlers: true,
+      introspection: true,
       definitions: {
         path: path.join(process.cwd(), 'src/graphql.schema.ts'),
         outputAs: 'class',

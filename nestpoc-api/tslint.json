@@ -14,7 +14,7 @@
     "max-file-line-count": [true, 250]
   },
   "linterOptions": {
-    "exclude": ["./migrations/*.ts"]
+    "exclude": ["./src/migrations/*.ts"]
   },
   "rulesDirectory": []
 }

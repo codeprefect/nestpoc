@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "target": "es6",
     "sourceMap": true,
+    "moduleResolution": "node",
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
@@ -15,5 +16,6 @@
     },
     "lib": ["dom", "es2018", "esnext"]
   },
-  "exclude": ["node_modules", "dist" ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

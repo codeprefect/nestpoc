@@ -5,18 +5,18 @@
    "username": "postgres",
    "password": "",
    "database": "nestpoc",
-   "synchronize": true,
+   "synchronize": false,
    "logging": false,
    "entities": [
-      "./**/models/*.model.ts"
+      "./src/modules/**/models/*.model.ts"
    ],
    "migrations": [
-      "./migrations/*.ts"
+      "./src/migrations/*.ts"
    ],
    "subscribers": [
-      "src/**/subscribers/*.ts"
+      "./src/**/subscribers/*.ts"
    ],
    "cli": {
-      "migrationsDir": "./migrations"
+      "migrationsDir": "./src/migrations"
    }
 }

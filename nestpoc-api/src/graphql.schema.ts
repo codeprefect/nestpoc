@@ -40,10 +40,16 @@ export class NestPocResponse {
 }
 
 export abstract class IQuery {
-    abstract temp__(): boolean | Promise<boolean>;
+    abstract getUser(email?: string): UserResult | Promise<UserResult>;
 }
 
 export class TwoFaResponse {
     secret: string;
     qr: string;
+}
+
+export class UserResult {
+    id: string;
+    email?: string;
+    username?: string;
 }

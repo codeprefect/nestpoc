@@ -1,0 +1,20 @@
+version: '3'
+
+volumes:
+  nestpoc_api:
+
+services:
+  backend:
+    env_file: ../nestpoc-api/production.env
+    build:
+      context: ../nestpoc-api
+      dockerfile: .docker/Dockerfile
+    command: node /usr/nestpoc/dist/main.js
+    volumes:
+      - nestpoc_api:/home/node/app/node_modules
+      - nestpoc_api:/usr/nestpoc/node_modules
+      - ../nestpoc-api:/home/node/app
+    ports:
+      - '3000:3000'
+    environment:
+      PORT: 3000

@@ -5,6 +5,16 @@ type Mutation {
   confirm2Fa(token: String): NestPocResponse!
 }
 
+type Query {
+  getUser(email: String): UserResult!
+}
+
+type UserResult {
+  id: String!
+  email: String
+  username: String
+}
+
 type LoginResponse {
   success: Boolean!
   token: String

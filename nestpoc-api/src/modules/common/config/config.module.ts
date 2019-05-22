@@ -7,7 +7,9 @@ import { databaseProviderKey, envProvider } from './constants';
 export const databaseProvider = {
   provide: databaseProviderKey,
   useFactory: async (configService: ConfigService) => {
-    return createConnection(configService.createDatabaseOpts());
+    const conn = await createConnection(configService.createDatabaseOpts());
+    await conn.runMigrations();
+    return conn;
   },
   inject: [ConfigService],
 };
@@ -25,4 +27,4 @@ export const databaseProvider = {
     databaseProvider,
   ],
 })
-export class ConfigModule { }
+export class ConfigModule {}

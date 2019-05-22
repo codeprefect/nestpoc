@@ -2,8 +2,10 @@ import * as Joi from '@hapi/joi';
 import { Inject, Injectable } from '@nestjs/common';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import { JwtModuleOptions, JwtOptionsFactory } from '@nestjs/jwt';
+import { JwtSecretRequestType } from '@nestjs/jwt/dist/interfaces';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import * as jwt from 'jsonwebtoken';
 import * as path from 'path';
 
 import { envProviderKey } from './constants';
@@ -105,15 +107,25 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
       database: this.envConfig.NESTPOC_DB_STORE,
       entities: [entitiesPath],
       migrations: [migrationsPath],
-      synchronize: true,
+      synchronize: false,
     };
   }
 
   public createJwtOptions(): JwtModuleOptions {
     return {
-      secretOrPrivateKey: this.envConfig.NESTPOC_JWT_PRIVATE_KEY,
-      signOptions: {
-        expiresIn: '1d',
+      secretOrKeyProvider: (
+        requestType: JwtSecretRequestType,
+        tokenOrPayload: string | Object | Buffer,
+        verifyOrSignOrOptions?: jwt.VerifyOptions | jwt.SignOptions,
+      ) => {
+        switch (requestType) {
+          case JwtSecretRequestType.SIGN:
+            return this.envConfig.NESTPOC_JWT_PRIVATE_KEY;
+          case JwtSecretRequestType.VERIFY:
+            return this.envConfig.NESTPOC_JWT_PUBLIC_KEY || this.envConfig.NESTPOC_JWT_PRIVATE_KEY;
+          default:
+            return this.envConfig.NESTPOC_JWT_PRIVATE_KEY;
+        }
       },
     };
   }

@@ -8,7 +8,7 @@ services:
     env_file: ../nestpoc-api/production.env
     build:
       context: ../nestpoc-api
-      dockerfile: .docker/Dockerfile
+      dockerfile: ./Dockerfile
     command: node /usr/nestpoc/dist/main.js
     volumes:
       - nestpoc_api:/home/node/app/node_modules

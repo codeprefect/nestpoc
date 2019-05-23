@@ -6,7 +6,6 @@ RUN npm install yarn -g
 
 # branch off to another image just for building the app
 FROM base-server as builder
-ENV NODE_ENV=development
 ENV BUILDER_APP_DIR=/home/node/app
 RUN mkdir -p ${BUILDER_APP_DIR}/node_modules && chown -R node:node ${BUILDER_APP_DIR}
 WORKDIR ${BUILDER_APP_DIR}
@@ -19,7 +18,6 @@ FROM base-server as server
 ENV SERVER_APP_DIR=/usr/nestpoc
 ENV BUILDER_APP_DIR=/home/node/app
 RUN mkdir -p ${SERVER_APP_DIR}/node_modules && chown -R node:node ${SERVER_APP_DIR}
-ENV NODE_ENV=production
 WORKDIR ${SERVER_APP_DIR}
 COPY --from=builder ${BUILDER_APP_DIR}/package.json ./
 USER node

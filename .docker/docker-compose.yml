@@ -2,6 +2,7 @@ version: '3'
 
 volumes:
   nestpoc_api:
+  nestpoc_ui:
 
 services:
   backend:
@@ -18,3 +19,16 @@ services:
       - '3000:3000'
     environment:
       PORT: 3000
+
+  frontend:
+    build:
+      context: ../nestpoc-ui
+      dockerfile: ./Dockerfile
+    command: /bin/sh
+    volumes:
+      - nestpoc_ui:/home/node/app/node_modules
+      - ../nestpoc-ui:/home/node/app
+    ports:
+      - ${UI_PORT}:80
+    environment:
+      PORT: 80

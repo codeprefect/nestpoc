@@ -22,11 +22,9 @@ variables:
 services:
   - docker:dind
 
-
 stages:
   - Build Backend Image
   - Build Frontend Image
-  # - Push Image to Registry
 
 before_script:
   - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY

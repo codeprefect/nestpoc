@@ -16,27 +16,26 @@ variables:
   # improved performance.
   DOCKER_DRIVER: overlay2
   CI_REGISTRY_PATH: $CI_REGISTRY/$CI_USERNAME/$CI_PROJECT_NAME
-  CI_FRONTEND_IMAGE: nestpoc-ui
-  CI_BACKEND_IMAGE: nestpoc-api
+  CI_FRONTEND_IMAGE: nestpoc_ui
+  CI_BACKEND_IMAGE: nestpoc_api
 
 services:
   - docker:dind
 
 stages:
-  - Build Backend Image
-  - Build Frontend Image
+  - Build Docker Images
 
 before_script:
   - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY
 
 backend:
-  stage: Build Backend Image
+  stage: Build Docker Images
   script:
-    - docker build -t $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest ./nestpoc-api
+    - docker build -t $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest ./$CI_BACKEND_IMAGE
     - docker push $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest
 
 frontend:
-  stage: Build Frontend Image
+  stage: Build Docker Images
   script:
-    - docker build -t $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest ./nestpoc-ui
+    - docker build -t $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest ./CI_FRONTEND_IMAGE
     - docker push $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest

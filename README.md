@@ -21,6 +21,7 @@ Also has a `docker-compose` implementation that expects the provision of the fol
 Gitlab can help you build and publish docker images to a docker repository.
 To use this, ensure you have the following variables declared on your Gitlab Repo
 
++ `CI_USERNAME` : your gitlab username
 + `CI_ACCESS_TOKEN` : this is the access token to log into gitlab cli if you are using 2FA.
 
 Feel free to check `./gitlab-ci.yml` and their documentations for more info.

@@ -16,27 +16,50 @@ variables:
   # improved performance.
   DOCKER_DRIVER: overlay2
   CI_REGISTRY_PATH: $CI_REGISTRY/$CI_USERNAME/$CI_PROJECT_NAME
-  CI_FRONTEND_IMAGE: nestpoc-ui
-  CI_BACKEND_IMAGE: nestpoc-api
+  CI_FRONTEND_IMAGE: nestpoc_ui
+  CI_BACKEND_IMAGE: nestpoc_api
 
 services:
   - docker:dind
 
 stages:
-  - Build Backend Image
-  - Build Frontend Image
+  - Test
+  - Build and Publish
 
-before_script:
-  - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY
-
-backend:
-  stage: Build Backend Image
+backend_test:
+  image: node:10-alpine
+  stage: Test
+  before_script:
+    - npm install yarn -g
   script:
-    - docker build -t $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest ./nestpoc-api
+    - cd ./nestpoc_api
+    - yarn install
+    - echo $ORM_CONFIG | base64 -d > ./ormconfig.json
+    - yarn db:migrate
+    - yarn test:unit --coverage
+
+frontend_test:
+  image: node:10-alpine
+  stage: Test
+  before_script:
+    - npm install yarn -g
+  script:
+    - cd ./nestpoc_ui
+    - yarn install
+    - yarn test
+
+backend_publish:
+  stage: Build and Publish
+  before_script:
+    - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest ./$CI_BACKEND_IMAGE
     - docker push $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest
 
-frontend:
-  stage: Build Frontend Image
+frontend_publish:
+  stage: Build and Publish
+  before_script:
+    - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY
   script:
-    - docker build -t $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest ./nestpoc-ui
+    - docker build -t $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest ./$CI_FRONTEND_IMAGE
     - docker push $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest

@@ -33,3 +33,5 @@ RUN yarn build
 FROM server
 ENV BUILDER_APP_DIR=/home/node/app
 COPY --chown=node:node --from=final ${BUILDER_APP_DIR}/dist ./dist
+
+EXPOSE 3000

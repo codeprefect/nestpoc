@@ -91,7 +91,7 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
 
   private get isDevelopment(): boolean {
     const env = this.envConfig.NODE_ENV || process.env.NODE_ENV;
-    return ['DEVELOPMENT', 'DEV'].includes(env.toLocaleUpperCase());
+    return env != null ? ['DEVELOPMENT', 'DEV'].includes(env.toLocaleUpperCase()) : false;
   }
 
   public createDatabaseOpts(): any {

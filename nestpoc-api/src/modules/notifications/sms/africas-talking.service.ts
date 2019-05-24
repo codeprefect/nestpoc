@@ -10,8 +10,10 @@ export class AfricasTalkingService implements ISmsSender {
   private readonly senderId: string;
   constructor(configService: ConfigService) {
     const credentials = configService.createAfricasTalkingOptions();
-    this.senderId = credentials.defaultSender;
-    this.sms = africastalking(credentials.options).SMS;
+    if (credentials != null) {
+      this.senderId = credentials.defaultSender;
+      this.sms = africastalking(credentials.options).SMS;
+    }
   }
 
   public async send(message: ISmsModel, from?: string): Promise<boolean> {

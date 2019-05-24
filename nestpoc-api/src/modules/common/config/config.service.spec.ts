@@ -8,7 +8,7 @@ describe('ConfigService', () => {
   let configService: ConfigService;
 
   const jwtPrivateKeyMock = 'justanylongrandomstring';
-  const databaseStoreMock = 'nest-poc-test';
+  const databaseStoreMock = 'nestpoc_test';
 
   beforeEach(async () => {
     module = Test.createTestingModule({
@@ -41,7 +41,8 @@ describe('ConfigService', () => {
     it('should create jwtOptions', () => {
       const jwtOptions = configService.createJwtOptions();
       expect(jwtOptions).toBeDefined();
-      expect(jwtOptions.secretOrPrivateKey).toEqual(jwtPrivateKeyMock);
+      expect(jwtOptions.secretOrKeyProvider).toBeInstanceOf(Function);
+      expect(jwtOptions.secretOrKeyProvider(0, {})).toEqual(jwtPrivateKeyMock);
     });
   });
 
@@ -57,7 +58,7 @@ describe('ConfigService', () => {
     it('should return an object of type GqlModuleOptions', () => {
       const options = configService.createGqlOptions();
       expect(options).toBeDefined();
-      expect(options.tracing).toBeFalsy();
+      expect(options.tracing).toBeTruthy();
     });
   });
 

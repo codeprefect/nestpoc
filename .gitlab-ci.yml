@@ -23,19 +23,54 @@ services:
   - docker:dind
 
 stages:
-  - Build Docker Images
+  - Test
+  - Build
+  - Publish
 
 before_script:
+  - npm install yarn -g
   - docker login -u $CI_USERNAME -p $CI_ACCESS_TOKEN $CI_REGISTRY
 
-backend:
-  stage: Build Docker Images
+backend_db_migrate:
+  before_script:
+    - cd nestpoc_api
+    - echo $ORM_CONFIG | base64 --decode > ./ormconfig.json
+  script:
+    - yarn db:migrate
+
+backend_test:
+  stage: Test
+  before_script:
+    - cd ./nestpoc_api
+    - yarn install
+    - backend_db_migrate
+  script:
+    - yarn test:unit --coverage
+
+frontend_test:
+  stage: Test
+  before_script:
+    - cd ./nestpoc_ui
+    - yarn install
+  script:
+    - yarn test
+
+backend_build:
+  stage: Build
   script:
     - docker build -t $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest ./$CI_BACKEND_IMAGE
-    - docker push $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest
 
-frontend:
-  stage: Build Docker Images
+frontend_build:
+  stage: Build
   script:
     - docker build -t $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest ./$CI_FRONTEND_IMAGE
+
+backend_publish:
+  stage: Publish
+  script:
+    - docker push $CI_REGISTRY_PATH/$CI_BACKEND_IMAGE:latest
+
+frontend_publish:
+  stage: Publish
+  script:
     - docker push $CI_REGISTRY_PATH/$CI_FRONTEND_IMAGE:latest

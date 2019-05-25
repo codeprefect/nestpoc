@@ -1,0 +1,22 @@
+{
+  "type": "postgres",
+  "host": "raja.db.elephantsql.com",
+  "port": 5432,
+  "username": "iaaszrrr",
+  "password": "FKFSEHe-dA_cv1vzihZhgszwUMGhnQ4Q",
+  "database": "iaaszrrr",
+  "synchronize": false,
+  "logging": false,
+  "entities": [
+     "./src/modules/**/models/*.model.ts"
+  ],
+  "migrations": [
+     "./src/migrations/*.ts"
+  ],
+  "subscribers": [
+     "./src/**/subscribers/*.ts"
+  ],
+  "cli": {
+     "migrationsDir": "./src/migrations"
+  }
+}

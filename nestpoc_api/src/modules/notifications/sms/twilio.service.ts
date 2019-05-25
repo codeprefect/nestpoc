@@ -12,8 +12,10 @@ export class TwilioService implements ISmsSender {
 
   constructor(config: ConfigService) {
     const options = config.createTwilioOptions();
-    this.sms = twilio(options.accountSid, options.authToken).messages;
-    this.defaultSender = options.sender;
+    if (options != null) {
+      this.sms = twilio(options.accountSid, options.authToken).messages;
+      this.defaultSender = options.sender;
+    }
   }
 
   public async send(message: ISmsModel, from?: string): Promise<boolean> {

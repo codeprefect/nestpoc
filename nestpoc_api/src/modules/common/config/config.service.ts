@@ -69,11 +69,9 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
       NESTPOC_DB_PASS: Joi.string().optional(),
       NESTPOC_DB_STORE: Joi.string().required(),
       NESTPOC_JWT_PRIVATE_KEY: Joi.string().required(),
-      NESTPOC_AFRICASTALKING_KEY: Joi.string().required(),
-      NESTPOC_AFRICASTALKING_USERNAME:
-        this.isDevelopment ? Joi.string().default('sandbox') : Joi.string().required(),
-      NESTPOC_AFRICASTALKING_SMS_SENDER: this.isDevelopment
-        ? Joi.string().default('NESTPOC') : Joi.string().required(),
+      NESTPOC_AFRICASTALKING_KEY: Joi.string().optional(),
+      NESTPOC_AFRICASTALKING_USERNAME: Joi.string().default('sandbox'),
+      NESTPOC_AFRICASTALKING_SMS_SENDER: Joi.string().default('NESTPOC'),
       NESTPOC_TWILIO_ACCOUNT_SID: Joi.optional(),
       NESTPOC_TWILIO_AUTH_TOKEN: Joi.optional(),
       NESTPOC_TWILIO_SENDER: Joi.optional(),
@@ -91,7 +89,7 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
 
   private get isDevelopment(): boolean {
     const env = this.envConfig.NODE_ENV || process.env.NODE_ENV;
-    return env != null ? ['DEVELOPMENT', 'DEV'].includes(env.toLocaleUpperCase()) : false;
+    return env != null ? ['DEVELOPMENT', 'DEV', 'TEST'].includes(env.toLocaleUpperCase()) : false;
   }
 
   public createDatabaseOpts(): any {
@@ -149,13 +147,18 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
   }
 
   public createAfricasTalkingOptions(): IAfricasTalkingOptions {
-    return {
+    const options = {
       options: {
         username: this.envConfig.NESTPOC_AFRICASTALKING_USERNAME,
         apiKey: this.envConfig.NESTPOC_AFRICASTALKING_KEY,
       },
       defaultSender: this.envConfig.NESTPOC_AFRICASTALKING_SMS_SENDER,
     };
+    if (options.options.username == null || options.options.apiKey == null) {
+      console.log('AfricasTalking configuration is not complete, you may not be able to send SMS');
+      return null;
+    }
+    return options;
   }
 
   public createTwilioOptions(): ITwilioOptions {
@@ -168,6 +171,7 @@ export class ConfigService implements JwtOptionsFactory, GqlOptionsFactory {
       console.warn(`Please note that NESTPOC_TWILIO_ACCOUNT_SID,\n
       NESTPOC_TWILIO_AUTH_TOKEN and NESTPOC_TWILIO_SENDER are required to use\n
       the twilio sms api, you may encounter problem sending sms`);
+      return null;
     }
     return options;
   }

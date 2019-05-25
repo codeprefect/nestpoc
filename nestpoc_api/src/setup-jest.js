@@ -1,5 +1,5 @@
 module.exports = () => {
-  process.env.NESTPOC_DB_STORE = 'nest-poc-test';
+  process.env.NESTPOC_DB_STORE = 'nestpoc_test';
   process.env.NESTPOC_JWT_PRIVATE_KEY = 'justanylongrandomstring';
   process.env.NESTPOC_AFRICASTALKING_KEY = 'hello';
   process.env.NESTPOC_AFRICASTALKING_USERNAME = 'sandbox';

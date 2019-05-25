@@ -6,26 +6,26 @@ volumes:
 
 services:
   api:
-    container_name: nestpoc-api
+    container_name: nestpoc_api
     env_file: ${API_ENV_FILE}
     build:
-      context: ../nestpoc-api
+      context: ../nestpoc_api
       dockerfile: ./Dockerfile
     command: node /usr/nestpoc/dist/main.js
     volumes:
       - nestpoc_api:/home/node/app/node_modules
       - nestpoc_api:/usr/nestpoc/node_modules
-      - ../nestpoc-api:/home/node/app
+      - ../nestpoc_api:/home/node/app
     ports:
       - ${API_PORT}:3000
 
   ui:
-    container_name: nestpoc-ui
+    container_name: nestpoc_ui
     build:
-      context: ../nestpoc-ui
+      context: ../nestpoc_ui
       dockerfile: ./Dockerfile
     volumes:
       - nestpoc_ui:/home/node/app/node_modules
-      - ../nestpoc-ui:/home/node/app
+      - ../nestpoc_ui:/home/node/app
     ports:
       - ${UI_PORT}:80

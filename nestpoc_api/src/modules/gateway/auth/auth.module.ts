@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+// import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestpoc/common';
 import { IdentityModule } from '@nestpoc/identity';
 import { AuthController } from './controllers/auth.controller';
@@ -11,11 +11,7 @@ import { IsUniqueUser } from './viewModels/validators/Is-unique-user';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    IsUniqueUser, AuthService,
-    AuthResolvers,
-    twoFaHelpersProvider,
-  ],
+  providers: [IsUniqueUser, AuthService, AuthResolvers, twoFaHelpersProvider],
   imports: [
     IdentityModule,
     // PassportModule.register({ defaultStrategy: '2fa-totp' }),

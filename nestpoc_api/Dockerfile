@@ -1,5 +1,5 @@
 # create a base image from node-alpine
-FROM node:12-alpine as base-server
+FROM node:14-alpine as base-server
 LABEL application="nestpoc-backend"
 ENV TERM=xterm-256color
 RUN npm install yarn -g

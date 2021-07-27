@@ -1,18 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { identityRepositories } from '@nestpoc/identity/identity.repositories';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-
-import { IPersonalInfoUpdate, PersonalInfo } from '@nestpoc/identity';
+import { IPersonalInfoUpdate, PersonalInfo } from '../../models';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PersonalInfoService {
-  constructor(@Inject(identityRepositories.PersonalInfo.key)
-  private readonly personalInfo: Repository<PersonalInfo>) { }
+  constructor(
+    @InjectRepository(PersonalInfo)
+    private readonly personalInfo: Repository<PersonalInfo>,
+  ) {}
 
   public async getByProfileId(profileId: string): Promise<PersonalInfo> {
-    const profile = await this.personalInfo.findOne({ profileId }, {
-      relations: ['profile'],
-    });
+    const profile = await this.personalInfo.findOne(
+      { profileId },
+      {
+        relations: ['profile'],
+      },
+    );
     return profile;
   }
 
@@ -21,7 +25,10 @@ export class PersonalInfoService {
     return created;
   }
 
-  public async update(id: string, update: IPersonalInfoUpdate): Promise<PersonalInfo> {
+  public async update(
+    id: string,
+    update: IPersonalInfoUpdate,
+  ): Promise<PersonalInfo> {
     await this.personalInfo.update(id, update);
     const updated = await this.personalInfo.findOne(id);
     return updated;

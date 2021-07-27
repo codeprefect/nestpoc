@@ -1,12 +1,12 @@
 {
-  "type": "postgres",
-  "host": "raja.db.elephantsql.com",
-  "port": 5432,
-  "username": "iaaszrrr",
-  "password": "FKFSEHe-dA_cv1vzihZhgszwUMGhnQ4Q",
-  "database": "iaaszrrr",
+  "type": "mssql",
+  "host": "localhost",
+  "port": 1433,
+  "username": "sa",
+  "password": "P@ssw0rd!",
+  "database": "nestpoc",
   "synchronize": false,
-  "logging": false,
+  "logging": true,
   "entities": [
      "./src/modules/**/models/*.model.ts"
   ],
@@ -18,5 +18,8 @@
   ],
   "cli": {
      "migrationsDir": "./src/migrations"
-  }
+  },
+  "options": {
+     "trustServerCertificate": true
+   }
 }

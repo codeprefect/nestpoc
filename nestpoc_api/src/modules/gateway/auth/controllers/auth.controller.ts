@@ -1,7 +1,12 @@
 import { Body, Controller, Post, Query } from '@nestjs/common';
 import { NestPocResponse } from '@nestpoc/common';
 import { AuthService } from '../services/auth.service';
-import { I2FaResponse, ILoginResponse, LoginModel, SignUpModel } from '../viewModels';
+import {
+  I2FaResponse,
+  ILoginResponse,
+  LoginModel,
+  SignUpModel,
+} from '../viewModels';
 
 @Controller('/')
 export class AuthController {
@@ -18,12 +23,16 @@ export class AuthController {
   }
 
   @Post('enable2Fa')
-  public async enable2FA(@Query('username') username: string): Promise<I2FaResponse> {
+  public async enable2FA(
+    @Query('username') username: string,
+  ): Promise<I2FaResponse> {
     return this.authService.enable2FA(username);
   }
 
   @Post('confirm2Fa')
-  public async confirm2FA(@Query('token') token: string): Promise<NestPocResponse> {
+  public async confirm2FA(
+    @Query('token') token: string,
+  ): Promise<NestPocResponse> {
     const username = 'codeprefect';
     return this.authService.complete2FaActivation(username, token);
   }

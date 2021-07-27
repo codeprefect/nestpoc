@@ -2,7 +2,7 @@ import { NestPocBaseEntity } from '@nestpoc/common';
 import { services } from '@nestpoc/common/config/constants';
 import * as bcrypt from 'bcryptjs';
 import { IsEmail, Length } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity } from 'typeorm';
 
 import { IUser } from './interfaces/user.interface';
 
@@ -10,7 +10,7 @@ import { IUser } from './interfaces/user.interface';
   schema: services.AUTH.schema,
 })
 export class User extends NestPocBaseEntity implements IUser {
-  public static new ({ username, email }: IUser, password: string): User {
+  public static new({ username, email }: IUser, password: string): User {
     const user = new User();
     user.username = username;
     user.email = email;

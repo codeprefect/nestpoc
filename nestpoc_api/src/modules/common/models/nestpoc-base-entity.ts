@@ -1,6 +1,9 @@
 import {
-  BaseEntity, CreateDateColumn, PrimaryGeneratedColumn,
-  UpdateDateColumn, VersionColumn,
+  BaseEntity,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 
 export abstract class NestPocTrackedEntity extends BaseEntity {

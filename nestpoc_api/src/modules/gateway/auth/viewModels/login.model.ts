@@ -7,10 +7,10 @@ export class LoginModel implements ILoginModel {
   public username: string;
 
   @Length(8, 32)
-  @ValidateIf(o => (o.code == null && o.token == null))
+  @ValidateIf((o) => o.code == null && o.token == null)
   public password?: string;
 
   public code?: string;
-  @ValidateIf(o => (o.password == null))
+  @ValidateIf((o) => o.password == null)
   public token?: string;
 }

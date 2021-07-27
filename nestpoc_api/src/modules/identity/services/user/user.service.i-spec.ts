@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { IdentityModule, User, UserService } from '@nestpoc/identity';
 import * as bcrypt from 'bcryptjs';
-import { Connection, Repository } from 'typeorm';
-
-import { identityRepositories } from '../../identity.repositories';
+import { Repository } from 'typeorm';
 
 describe('UserService', () => {
   let userRepo: Repository<User>;
@@ -11,7 +9,8 @@ describe('UserService', () => {
   let service: UserService;
   const testUser = User.new(
     { username: 'testuser', email: 'testuser@email.com' },
-    'password123');
+    'password123',
+  );
   let createdUser: User;
 
   beforeAll(async () => {
@@ -21,7 +20,7 @@ describe('UserService', () => {
     }).compile();
 
     // get db and repositories
-    userRepo = module.get(identityRepositories.User.key, { strict: false });
+    userRepo = module.get<Repository<User>>(typeof userRepo, { strict: false });
     createdUser = await userRepo.save(testUser);
 
     // get service under test
@@ -40,7 +39,8 @@ describe('UserService', () => {
     let newUser: User;
     const anotherUser = User.new(
       { username: 'testusercreate', email: 'testusercreate@email.com' },
-      'password123');
+      'password123',
+    );
     beforeAll(async () => {
       newUser = await service.create(anotherUser);
     });
@@ -52,7 +52,9 @@ describe('UserService', () => {
     it('should return user with assigned id', async () => {
       expect(newUser).toBeDefined();
       expect(newUser.id).toBeDefined();
-      expect(bcrypt.compareSync(anotherUser.password, newUser.hashedPassword)).toBeTruthy();
+      expect(
+        bcrypt.compareSync(anotherUser.password, newUser.hashedPassword),
+      ).toBeTruthy();
       expect(newUser.email).toEqual(anotherUser.email);
     });
   });
@@ -78,7 +80,9 @@ describe('UserService', () => {
   describe('is2FaEnabled', () => {
     it('should validate if 2FA is enabled', async () => {
       const enabledBefore = service.is2FAEnabled(createdUser);
-      const updatedUser = await service.update(createdUser.id, { twoFASecret: 'Hello' });
+      const updatedUser = await service.update(createdUser.id, {
+        twoFASecret: 'Hello',
+      });
       const enabledAfter = service.is2FAEnabled(updatedUser);
 
       expect(enabledBefore).toBeFalsy();
@@ -91,7 +95,9 @@ describe('UserService', () => {
       const oldHash = createdUser.hashedPassword;
       const newPassword = 'ajanlekoko';
       const newHash = bcrypt.hashSync(newPassword);
-      const updatedUser = await service.update(createdUser.id, { hashedPassword: newHash });
+      const updatedUser = await service.update(createdUser.id, {
+        hashedPassword: newHash,
+      });
 
       expect(updatedUser.hashedPassword).toEqual(newHash);
       await service.update(createdUser.id, { hashedPassword: oldHash });
@@ -102,7 +108,10 @@ describe('UserService', () => {
     it('should confirm if password matches', async () => {
       const wrongPassword = 'hello';
       const existingUser = await service.findByEmail(testUser.email);
-      const validated = await service.validatePassword(existingUser, testUser.password);
+      const validated = await service.validatePassword(
+        existingUser,
+        testUser.password,
+      );
       const wrong = await service.validatePassword(existingUser, wrongPassword);
 
       expect(validated).toBeTruthy();
@@ -111,7 +120,10 @@ describe('UserService', () => {
 
     it('should return false if user is null', async () => {
       const dummyPassword = 'hello';
-      const validated = await service.validatePassword(undefined, dummyPassword);
+      const validated = await service.validatePassword(
+        undefined,
+        dummyPassword,
+      );
       expect(validated).toBeFalsy();
     });
   });

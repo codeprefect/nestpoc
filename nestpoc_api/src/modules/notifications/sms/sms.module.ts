@@ -5,16 +5,8 @@ import { AfricasTalkingService } from './africas-talking.service';
 import { TwilioService } from './twilio.service';
 
 @Module({
-  providers: [
-    AfricasTalkingService,
-    TwilioService,
-  ],
-  imports: [
-    ConfigModule,
-  ],
-  exports: [
-    AfricasTalkingService,
-    TwilioService,
-  ],
+  providers: [AfricasTalkingService, TwilioService],
+  imports: [ConfigModule],
+  exports: [AfricasTalkingService, TwilioService],
 })
-export class SmsModule { }
+export class SmsModule {}

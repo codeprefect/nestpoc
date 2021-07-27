@@ -1,5 +1,4 @@
-import * as uuidv4 from 'uuid/v4';
-
+import { v4 as uuidv4 } from 'uuid';
 import { User } from '../models';
 import { UserService } from '../services/user/user.service';
 
@@ -7,14 +6,16 @@ export const userStore: User[] = [];
 
 export const userServiceMock = {
   findByEmail: (email: string): Promise<User> => {
-    return new Promise((resolve, reject) => {
-      const user = userStore.find(u => u.email === email.toLocaleUpperCase());
+    return new Promise((resolve) => {
+      const user = userStore.find((u) => u.email === email.toLocaleUpperCase());
       resolve(user);
     });
   },
   findByUsername: (username: string): Promise<User> => {
-    return new Promise((resolve, reject) => {
-      const user = userStore.find(u => u.username === username.toLocaleUpperCase());
+    return new Promise((resolve) => {
+      const user = userStore.find(
+        (u) => u.username === username.toLocaleUpperCase(),
+      );
       resolve(user);
     });
   },
@@ -40,8 +41,8 @@ export const userServiceMock = {
     return new Promise((resolve, reject) => {
       try {
         const [existing, index] = [
-          userStore.find(u => u.id === id),
-          userStore.findIndex(u => u.id === id),
+          userStore.find((u) => u.id === id),
+          userStore.findIndex((u) => u.id === id),
         ];
 
         if (!existing) {

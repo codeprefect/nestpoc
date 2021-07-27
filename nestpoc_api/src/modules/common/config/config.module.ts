@@ -1,30 +1,15 @@
 import { Module } from '@nestjs/common';
-import { createConnection } from 'typeorm';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from './config.service';
-import { databaseProviderKey, envProvider } from './constants';
-
-export const databaseProvider = {
-  provide: databaseProviderKey,
-  useFactory: async (configService: ConfigService) => {
-    const conn = await createConnection(configService.createDatabaseOpts());
-    await conn.runMigrations();
-    return conn;
-  },
-  inject: [ConfigService],
-};
+import { envProvider } from './constants';
 
 @Module({
-  imports: [],
-  providers: [
-    ConfigService,
-    envProvider,
-    databaseProvider,
+  imports: [
+    TypeOrmModule.forRootAsync({
+      useExisting: ConfigService,
+    }),
   ],
-  exports: [
-    ConfigService,
-    envProvider,
-    databaseProvider,
-  ],
+  providers: [ConfigService, envProvider],
+  exports: [ConfigService, envProvider],
 })
 export class ConfigModule {}

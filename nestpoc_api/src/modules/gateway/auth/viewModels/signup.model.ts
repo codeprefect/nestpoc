@@ -6,9 +6,9 @@ import { IsUniqueUser } from './validators';
 
 export class SignUpModel implements ISignUpModel {
   @Length(3, 30)
-  @Validate(
-    IsUniqueUser, ['username'],
-    { message: 'user with given username ($value) already exists' })
+  @Validate(IsUniqueUser, ['username'], {
+    message: 'user with given username ($value) already exists',
+  })
   public username: string;
 
   @Length(8, 32)
@@ -19,8 +19,8 @@ export class SignUpModel implements ISignUpModel {
   public confirmPassword: string;
 
   @IsEmail()
-  @Validate(
-    IsUniqueUser, ['email'],
-    { message: 'user with given email ($value) already exists' })
+  @Validate(IsUniqueUser, ['email'], {
+    message: 'user with given email ($value) already exists',
+  })
   public email: string;
 }

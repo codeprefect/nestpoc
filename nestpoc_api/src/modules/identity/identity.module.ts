@@ -1,24 +1,14 @@
 import { Module } from '@nestjs/common';
-import { CommonModule, getModelRepositories } from '@nestpoc/common';
-
-import { identityRepositories } from './identity.repositories';
+import { CommonModule } from '@nestpoc/common';
 import { PersonalInfoService } from './services/personal-info/personal-info.service';
 import { UserService } from './services/user/user.service';
-
-const authRepositoriesProviders = getModelRepositories(identityRepositories);
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './models/user.model';
+import { PersonalInfo } from './models/personal-info.model';
 
 @Module({
-  imports: [
-    CommonModule,
-  ],
-  providers: [
-    ...authRepositoriesProviders,
-    UserService,
-    PersonalInfoService,
-  ],
-  exports: [
-    UserService,
-    PersonalInfoService,
-  ],
+  imports: [CommonModule, TypeOrmModule.forFeature([User, PersonalInfo])],
+  providers: [UserService, PersonalInfoService],
+  exports: [UserService, PersonalInfoService],
 })
-export class IdentityModule { }
+export class IdentityModule {}

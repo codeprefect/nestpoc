@@ -1,7 +1,12 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { NestPocResponse } from '@nestpoc/common';
 import { AuthService } from '../services/auth.service';
-import { I2FaResponse, ILoginResponse, LoginModel, SignUpModel } from '../viewModels';
+import {
+  I2FaResponse,
+  ILoginResponse,
+  LoginModel,
+  SignUpModel,
+} from '../viewModels';
 
 @Resolver('Auth')
 export class AuthResolvers {
@@ -22,12 +27,16 @@ export class AuthResolvers {
   }
 
   @Mutation('enable2Fa')
-  public async enable2FA(@Args('username') username: string): Promise<I2FaResponse> {
+  public async enable2FA(
+    @Args('username') username: string,
+  ): Promise<I2FaResponse> {
     return this.authService.enable2FA(username);
   }
 
   @Mutation('confirm2Fa')
-  public async confirm2FA(@Args('token') token: string): Promise<NestPocResponse> {
+  public async confirm2FA(
+    @Args('token') token: string,
+  ): Promise<NestPocResponse> {
     const username = 'codeprefect';
     return this.authService.complete2FaActivation(username, token);
   }

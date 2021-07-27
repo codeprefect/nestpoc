@@ -1,3 +1,4 @@
+
 module.exports = () => {
   process.env.NESTPOC_DB_STORE = 'nestpoc_test';
   process.env.NESTPOC_JWT_PRIVATE_KEY = 'justanylongrandomstring';

@@ -1,15 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { Repository } from 'typeorm';
-
-import { identityRepositories } from '../../identity.repositories';
-import { IUserUpdate } from '../../models/interfaces/user.interface';
-import { User } from '../../models/user.model';
+import { IUserUpdate, User } from '../../models';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject(identityRepositories.User.key)
-  private readonly users: Repository<User>) { }
+  constructor(
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
+  ) {}
 
   public async findByEmail(email: string): Promise<User> {
     return this.users.findOne({ email });
@@ -19,7 +19,10 @@ export class UserService {
     return this.users.findOne({ username });
   }
 
-  public async validatePassword(user: User, password: string): Promise<boolean> {
+  public async validatePassword(
+    user: User,
+    password: string,
+  ): Promise<boolean> {
     if (user != null) {
       return bcrypt.compare(password, user.hashedPassword);
     }

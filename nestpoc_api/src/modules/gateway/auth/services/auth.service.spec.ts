@@ -1,9 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { userServiceProviderMock } from '@nestpoc/identity/__mocks__/identity';
-
 import { jwtServiceProviderMock } from '../__mocks__/auth';
 import { twoFaHelpersProvider } from '../helpers/two-fa.helper';
-import { ILoginResponse } from '../viewModels/interfaces/login-response.interface';
 import { SignUpModel } from '../viewModels/signup.model';
 import { AuthService } from './auth.service';
 
@@ -16,7 +14,9 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      providers: [AuthService, twoFaHelpersProvider,
+      providers: [
+        AuthService,
+        twoFaHelpersProvider,
         userServiceProviderMock,
         jwtServiceProviderMock,
       ],
@@ -44,11 +44,10 @@ describe('AuthService', () => {
     twoFaSignUp.email = 'twofauser@email.com';
     twoFaSignUp.password = 'twofaPassword';
     twoFaSignUp.username = 'twofauser';
-    let twoFaUser: ILoginResponse;
     let userUpdateMock;
 
     beforeAll(async () => {
-      twoFaUser = await authService.signUp(twoFaSignUp);
+      await authService.signUp(twoFaSignUp);
     });
 
     beforeEach(() => {
@@ -59,9 +58,9 @@ describe('AuthService', () => {
       const twoFaResult = await authService.enable2FA(twoFaSignUp.username);
 
       expect(twoFaResult.secret).toBeDefined();
-      expect(userUpdateMock).toBeCalledWith(
-        expect.any(String), { temp2FASecret: twoFaResult.secret },
-      );
+      expect(userUpdateMock).toBeCalledWith(expect.any(String), {
+        temp2FASecret: twoFaResult.secret,
+      });
     });
   });
 
@@ -77,7 +76,8 @@ describe('AuthService', () => {
 
     it('should generate token if user does not have 2fa enabled', async () => {
       const loginResult = await authService.login({
-        username: loginSignUp.email, password: loginSignUp.password,
+        username: loginSignUp.email,
+        password: loginSignUp.password,
       });
 
       expect(loginResult.success).toBeTruthy();

@@ -1,7 +1,14 @@
 import { NestPocTrackedEntity } from '@nestpoc/common';
 import { services } from '@nestpoc/common/config/constants';
-import { BeforeInsert, BeforeUpdate, Column,
-  Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 
 import { IPersonalInfo } from './interfaces/personal-info.interface';
 import { User } from './user.model';
@@ -9,8 +16,11 @@ import { User } from './user.model';
 @Entity({
   schema: services.AUTH.schema,
 })
-export class PersonalInfo extends NestPocTrackedEntity implements IPersonalInfo {
-  public static new ({
+export class PersonalInfo
+  extends NestPocTrackedEntity
+  implements IPersonalInfo
+{
+  public static new({
     firstName,
     lastName,
     phoneNumber,
@@ -55,7 +65,7 @@ export class PersonalInfo extends NestPocTrackedEntity implements IPersonalInfo 
   })
   public phoneNumber: string;
 
-  @OneToOne(type => User)
+  @OneToOne(() => User)
   @JoinColumn()
   public profile: User;
 

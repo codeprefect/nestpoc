@@ -1,5 +1,10 @@
 import { Test } from '@nestjs/testing';
-import { IdentityModule, PersonalInfo, PersonalInfoService, User } from '@nestpoc/identity';
+import {
+  IdentityModule,
+  PersonalInfo,
+  PersonalInfoService,
+  User,
+} from '@nestpoc/identity';
 import { Repository } from 'typeorm';
 
 import * as uuidv4 from 'uuid/v4';
@@ -14,7 +19,8 @@ describe('PersonalInfoService', () => {
   const testProfile = {
     user: User.new(
       { email: 'personalInfo@example.com', username: 'personalinfo' },
-      'p@ssw0rd!'),
+      'p@ssw0rd!',
+    ),
     personalInfo: PersonalInfo.new({
       firstName: 'Personal',
       lastName: 'Info',
@@ -31,10 +37,10 @@ describe('PersonalInfoService', () => {
     }).compile();
 
     // extract needed repositories and database connection
-    ([userRepo , personalInfoRepo] = [
+    [userRepo, personalInfoRepo] = [
       module.get(identityRepositories.User.key, { strict: false }),
       module.get(identityRepositories.PersonalInfo.key, { strict: false }),
-    ]);
+    ];
 
     // add and extract test data
     const testUser = await userRepo.save(testProfile.user);
@@ -42,7 +48,8 @@ describe('PersonalInfoService', () => {
     await personalInfoRepo.save(testProfile.personalInfo);
     testProfileInfo = await personalInfoRepo.findOne(
       { profileId: testUser.id },
-      { relations: ['profile'] });
+      { relations: ['profile'] },
+    );
 
     // get service we need to test
     service = module.get<PersonalInfoService>(PersonalInfoService);
@@ -60,7 +67,7 @@ describe('PersonalInfoService', () => {
   });
 
   describe('getByProfileId', () => {
-    it('should return valid user if profileId exists', async() => {
+    it('should return valid user if profileId exists', async () => {
       const result = await service.getByProfileId(testProfileInfo.profileId);
 
       expect(result).toBeDefined();
@@ -79,7 +86,10 @@ describe('PersonalInfoService', () => {
     const testInfo = testProfile.personalInfo;
 
     beforeAll(async () => {
-      const user = User.new({ username: 'testuser4', email: 'testuser4@test.com' }, 'P@ssw0rd!');
+      const user = User.new(
+        { username: 'testuser4', email: 'testuser4@test.com' },
+        'P@ssw0rd!',
+      );
       profile = await userRepo.save(user);
     });
 
@@ -96,13 +106,13 @@ describe('PersonalInfoService', () => {
       expect(result.profileId).toBeDefined();
     });
 
-    it('should fail when profileId is not provided', async() => {
+    it('should fail when profileId is not provided', async () => {
       const testFail = PersonalInfo.new(testInfo);
       delete testFail.profileId;
       expect(service.create(testFail)).rejects.toThrowError();
     });
 
-    it('should fail when profileId is not a valid foreign key', async() => {
+    it('should fail when profileId is not a valid foreign key', async () => {
       const testFail = PersonalInfo.new(testInfo);
       testFail.profileId = uuidv4();
       expect(service.create(testFail)).rejects.toThrowError();

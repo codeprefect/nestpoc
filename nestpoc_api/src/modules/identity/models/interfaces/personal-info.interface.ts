@@ -1,4 +1,3 @@
-import { IPersonalInfo } from './personal-info.interface';
 export interface IPersonalInfo {
   firstName: string;
   lastName: string;

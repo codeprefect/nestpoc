@@ -17,7 +17,9 @@ export const twoFaHelpers: I2FaHelpers = {
   get2FASecretWithQRCode: (username: string): I2FaResults => {
     const { base32: secret } = speakeasy.generateSecret({ length: 20 });
     const authUrl = speakeasy.otpauthURL({
-      secret, label: username, algorithm: 'sha512',
+      secret,
+      label: username,
+      algorithm: 'sha512',
     });
     const qrCode = qr.imageSync(authUrl, { type: 'svg' });
 

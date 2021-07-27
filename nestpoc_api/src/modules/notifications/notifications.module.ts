@@ -1,7 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestpoc/common';
 import { smsProvider, smsProviders } from './constants';
-import { AfricasTalkingService, ISmsProvider, ISmsSender, TwilioService } from './sms';
+import {
+  AfricasTalkingService,
+  ISmsProvider,
+  ISmsSender,
+  TwilioService,
+} from './sms';
 import { SmsModule } from './sms/sms.module';
 
 const sms = {
@@ -22,14 +27,8 @@ const sms = {
 
 @Global()
 @Module({
-  imports: [
-    SmsModule,
-  ],
-  providers: [
-    sms,
-  ],
-  exports: [
-    sms,
-  ],
+  imports: [SmsModule],
+  providers: [sms],
+  exports: [sms],
 })
-export class NotificationsModule { }
+export class NotificationsModule {}

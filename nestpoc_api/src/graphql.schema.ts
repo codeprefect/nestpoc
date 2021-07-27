@@ -1,15 +1,17 @@
 
-/** ------------------------------------------------------
+/*
+ * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
 
 /* tslint:disable */
+/* eslint-disable */
 export class LoginInput {
     username: string;
-    password?: string;
-    code?: string;
-    token?: string;
+    password?: Nullable<string>;
+    code?: Nullable<string>;
+    token?: Nullable<string>;
 }
 
 export class SignUpInput {
@@ -18,29 +20,30 @@ export class SignUpInput {
     password: string;
 }
 
-export class LoginResponse {
-    success: boolean;
-    token?: string;
-    has2fa?: boolean;
-}
-
 export abstract class IMutation {
-    abstract logIn(loginInput?: LoginInput): LoginResponse | Promise<LoginResponse>;
+    abstract logIn(loginInput?: Nullable<LoginInput>): LoginResponse | Promise<LoginResponse>;
 
-    abstract signUp(signUpInput?: SignUpInput): LoginResponse | Promise<LoginResponse>;
+    abstract signUp(signUpInput?: Nullable<SignUpInput>): LoginResponse | Promise<LoginResponse>;
 
-    abstract enable2Fa(username?: string): TwoFaResponse | Promise<TwoFaResponse>;
+    abstract enable2Fa(username?: Nullable<string>): TwoFaResponse | Promise<TwoFaResponse>;
 
-    abstract confirm2Fa(token?: string): NestPocResponse | Promise<NestPocResponse>;
-}
-
-export class NestPocResponse {
-    statusCode: number;
-    message: string;
+    abstract confirm2Fa(token?: Nullable<string>): NestPocResponse | Promise<NestPocResponse>;
 }
 
 export abstract class IQuery {
-    abstract getUser(email?: string): UserResult | Promise<UserResult>;
+    abstract getUser(email?: Nullable<string>): UserResult | Promise<UserResult>;
+}
+
+export class UserResult {
+    id: string;
+    email?: Nullable<string>;
+    username?: Nullable<string>;
+}
+
+export class LoginResponse {
+    success: boolean;
+    token?: Nullable<string>;
+    has2fa?: Nullable<boolean>;
 }
 
 export class TwoFaResponse {
@@ -48,8 +51,9 @@ export class TwoFaResponse {
     qr: string;
 }
 
-export class UserResult {
-    id: string;
-    email?: string;
-    username?: string;
+export class NestPocResponse {
+    statusCode: number;
+    message: string;
 }
+
+type Nullable<T> = T | null;

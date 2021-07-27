@@ -1,9 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { i18nEmailRegex, NestPocException, NestPocResponse } from '@nestpoc/common';
+import {
+  i18nEmailRegex,
+  NestPocException,
+  NestPocResponse,
+} from '@nestpoc/common';
 import { User, UserService } from '@nestpoc/identity';
 import * as crypto from 'crypto';
-import { I2FaHelpers, I2FaResults, twoFaHelpersKey } from '../helpers/two-fa.helper';
+import {
+  I2FaHelpers,
+  I2FaResults,
+  twoFaHelpersKey,
+} from '../helpers/two-fa.helper';
 import { ILoginModel, ILoginResponse, ISignUpModel } from '../viewModels';
 
 @Injectable()
@@ -11,7 +19,8 @@ export class AuthService {
   constructor(
     private readonly users: UserService,
     private readonly jwtService: JwtService,
-    @Inject(twoFaHelpersKey) private readonly twoFaHelpers: I2FaHelpers) { }
+    @Inject(twoFaHelpersKey) private readonly twoFaHelpers: I2FaHelpers,
+  ) {}
 
   public async login(model: ILoginModel): Promise<ILoginResponse> {
     let response: ILoginResponse;
@@ -47,12 +56,17 @@ export class AuthService {
       throw new NestPocException('user already has 2FA enabled');
     }
 
-    const twoFaDetails = this.twoFaHelpers.get2FASecretWithQRCode(user.username);
-    await this.users.update(user.id,  { temp2FASecret: twoFaDetails.secret });
+    const twoFaDetails = this.twoFaHelpers.get2FASecretWithQRCode(
+      user.username,
+    );
+    await this.users.update(user.id, { temp2FASecret: twoFaDetails.secret });
     return twoFaDetails;
   }
 
-  public async complete2FaActivation(username: string, code: string): Promise<NestPocResponse> {
+  public async complete2FaActivation(
+    username: string,
+    code: string,
+  ): Promise<NestPocResponse> {
     const user = await this.users.findByUsername(username);
     if (!user) {
       throw new NestPocException('user with specified username does not exist');
@@ -62,7 +76,8 @@ export class AuthService {
       throw new NestPocException('2FA Confirmation failed');
     }
     await this.users.update(user.id, {
-      twoFASecret: user.temp2FASecret, temp2FASecret: null,
+      twoFASecret: user.temp2FASecret,
+      temp2FASecret: null,
     });
 
     return new NestPocResponse({
@@ -71,7 +86,7 @@ export class AuthService {
     });
   }
 
-  private async findUser(model: ILoginModel, isEmail: boolean = true): Promise<User> {
+  private async findUser(model: ILoginModel, isEmail = true): Promise<User> {
     const user = isEmail
       ? await this.users.findByEmail(model.username)
       : await this.users.findByUsername(model.username);
@@ -100,7 +115,10 @@ export class AuthService {
     if (model.code == null || model.token == null) {
       return false;
     }
-    return this.validateTempToken(user, model.token) && this.validateToken(user, model.code);
+    return (
+      this.validateTempToken(user, model.token) &&
+      this.validateToken(user, model.code)
+    );
   }
 
   private validateDirectToken(user: User, model: ILoginModel): boolean {
@@ -120,8 +138,11 @@ export class AuthService {
   }
 
   private getJwtToken(user: User): ILoginResponse {
-    const jwtPayload = this.jwtService.sign(
-      { email: user.email, id: user.id, username: user.username });
+    const jwtPayload = this.jwtService.sign({
+      email: user.email,
+      id: user.id,
+      username: user.username,
+    });
     if (jwtPayload) {
       return {
         token: jwtPayload,
@@ -131,7 +152,11 @@ export class AuthService {
     throw new NestPocException('token cannot be generated at this time');
   }
 
-  private async verifyPassword(model: ILoginModel, user: User, isEmail = false): Promise<boolean> {
+  private async verifyPassword(
+    model: ILoginModel,
+    user: User,
+    isEmail = false,
+  ): Promise<boolean> {
     if (model.password) {
       const valid = await this.users.validatePassword(user, model.password);
       if (valid) {
@@ -148,6 +173,7 @@ export class AuthService {
     }
     const isDirect = model.code != null && model.password != null;
     return isDirect
-      ? this.validateDirectToken(user, model) : this.validateIndirectToken(user, model);
+      ? this.validateDirectToken(user, model)
+      : this.validateIndirectToken(user, model);
   }
 }

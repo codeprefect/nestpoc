@@ -12,10 +12,7 @@ describe('ConfigService', () => {
 
   beforeEach(async () => {
     module = Test.createTestingModule({
-      providers: [
-        ConfigService,
-        envFileMock,
-      ],
+      providers: [ConfigService, envFileMock],
     });
     const compiledModule = await module.compile();
     configService = compiledModule.get<ConfigService>(ConfigService);
@@ -25,7 +22,7 @@ describe('ConfigService', () => {
     expect(configService).toBeDefined();
   });
 
-  it('should fail to instantiate when a required config parameter is missing', async (done) => {
+  it('should fail to instantiate when a required config parameter is missing', async () => {
     const storeName = process.env.NESTPOC_DB_STORE;
     process.env.NESTPOC_DB_STORE = '';
     try {
@@ -34,7 +31,6 @@ describe('ConfigService', () => {
       expect(err.message).toContain('NESTPOC_DB_STORE');
     }
     process.env.NESTPOC_DB_STORE = storeName;
-    done();
   });
 
   describe('createJwtOptions', () => {
@@ -47,8 +43,8 @@ describe('ConfigService', () => {
   });
 
   describe('createDatabaseOptions', () => {
-    it('should return database options', () => {
-      const databaseOptions = configService.createDatabaseOpts();
+    it('should return database options', async () => {
+      const databaseOptions = await configService.createTypeOrmOptions();
       expect(databaseOptions).toBeDefined();
       expect(databaseOptions.database).toEqual(databaseStoreMock);
     });
